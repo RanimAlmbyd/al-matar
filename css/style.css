@@ -216,3 +216,11 @@
 .custom-color-red-font:hover{
   color: var(--custom-red-dr);
 }
+@media screen and (max-width: 500px) {
+  .ul-custom-media {
+    display: flex;
+    flex-wrap: nowrap;
+        /* margin: 22px; */
+    margin-right: 30px;
+  }
+}
