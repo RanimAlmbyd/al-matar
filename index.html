@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matar</title>
+    <link rel="icon" type="image/png" href="./image/Untitled-44.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="./css/bootstrap.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    
+    <header>
+        <div class="px-3 py-2 text-bg-dark border-bottom  bg-red-colour">
+          <div class="container">
+            <div class="d-flex align-items-center justify-content-between w-100" style="height: 24px;line-height:24px;">
+              <a href="/" class="d-flex align-items-left my-2 my-lg-0 me-lg-auto text-white text-decoration-none justify-content-start">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bootstrap" viewBox="0 0 16 16">
+                  <path d="M5.062 12h3.475c1.804 0 2.888-.908 2.888-2.396 0-1.102-.761-1.916-1.904-2.034v-.1c.832-.14 1.482-.93 1.482-1.816 0-1.3-.955-2.11-2.542-2.11H5.062zm1.313-4.875V4.658h1.78c.973 0 1.542.457 1.542 1.237 0 .802-.604 1.23-1.764 1.23zm0 3.762V8.162h1.822c1.236 0 1.887.463 1.887 1.348 0 .896-.627 1.377-1.811 1.377z"/>
+                  <path d="M0 4a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4zm4-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V4a3 3 0 0 0-3-3z"/>
+                </svg>
+              </a>
+    
+              <ul class="nav col-12 col-lg-auto justify-content-end my-md-0 text-small">
+                <li>
+                  <a href="#" class="nav-link text-white custom-nav-link" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z"/>
+                    </svg>
+                </a>
+                
+                </li>
+                <li>
+                  <!-- we have text-secondary to make hover -->
+                  <a href="#" class="nav-link text-white custom-nav-link" style="position: relative;top: 6px;"  data-toggle="modal" data-target="#mapModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi d-block mx-auto" viewBox="0 0 16 16">
+                      <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                    </svg>
+                  </a>
+                </li>
+
+                <li>
+                  <div class="dropdown show">
+                    <a href="#" class="nav-link text-white custom-nav-link" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-globe" viewBox="0 0 16 16">
+                        <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m7.5-6.923c-.67.204-1.335.82-1.887 1.855A8 8 0 0 0 5.145 4H7.5zM4.09 4a9.3 9.3 0 0 1 .64-1.539 7 7 0 0 1 .597-.933A7.03 7.03 0 0 0 2.255 4zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a7 7 0 0 0-.656 2.5zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5zM8.5 5v2.5h2.99a12.5 12.5 0 0 0-.337-2.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5zM5.145 12q.208.58.468 1.068c.552 1.035 1.218 1.65 1.887 1.855V12zm.182 2.472a7 7 0 0 1-.597-.933A9.3 9.3 0 0 1 4.09 12H2.255a7 7 0 0 0 3.072 2.472M3.82 11a13.7 13.7 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5zm6.853 3.472A7 7 0 0 0 13.745 12H11.91a9.3 9.3 0 0 1-.64 1.539 7 7 0 0 1-.597.933M8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855q.26-.487.468-1.068zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.7 13.7 0 0 1-.312 2.5m2.802-3.5a7 7 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7 7 0 0 0-3.072-2.472c.218.284.418.598.597.933M10.855 4a8 8 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4z"/>
+                      </svg>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-custom" aria-labelledby="dropdownMenuLink">
+                      <a class="dropdown-item" href="#">English</a>
+                      <a class="dropdown-item" href="#">العربية</a>
+                    </div>
+                  </div>
+                  
+                </li>
+              </ul>
+
+              <!-- <button class="navbar-toggler d-md-none d-flex" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-justify" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+                </svg>
+              </button> -->
+
+            </div>
+          </div>
+        </div>
+        <!-- Bootstrap Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalCenterTitle">Get in Touch with Us</h5>
+                      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                  </div>
+                  <div class="modal-body">
+                      
+                  </div>
+                  <!-- <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
+                  </div> -->
+              </div>
+          </div>
+        </div>
+        <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="mapModalLabel">Your Location</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- Map container -->
+              <div id="map" style="height: 400px;"></div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <!-- end model -->
+
+        <div class="px-3 py-2 border-bottom">
+          <div class="container">
+            <div class="row">
+              <div class="col col-sm-3 col-lg-4 d-lg-none">
+                <div style="height: 100%;line-height: 52px;">
+                  <a id="toggle-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-filter-right" viewBox="0 0 16 16">
+                      <path d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5m0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5m0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5"/>
+                    </svg>
+                  </a>
+                  
+                </div>
+              </div>
+
+              <div class="col col-sm-8 col-lg-4 height-center logo-sm">
+                  <div class="custom-style-logo">
+                    <img src="./image/Untitled-44.png" style="height: 100%;width: 100%;"/>
+                  </div>
+              </div>
+
+              <div class="col col-sm-3 col-lg-4 d-lg-none text-end">
+                <ul class="nav col-12 col-lg-auto my-2 justify-content-end my-md-0 text-small">
+                  <li>
+                    <!-- we have text-secondary to make hover -->
+                    <a href="#" class="nav-link text-secondary custom-nav-link" style="text-align: center;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                      </svg>
+                      <p class="custom-sm-paragraph">Sing-In</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="nav-link text-secondary custom-nav-link" style="text-align: center;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                      </svg>
+                      <p class="custom-sm-paragraph">My Purchases</p>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+
+
+              <div class="col height-center d-none d-lg-block">
+                <form class="d-flex col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search" style="width: 100%;">
+                  <input type="search" class="form-control" placeholder="Search..." aria-label="Search" style="margin-right:4px;">
+                  <button class="btn btn-outline-success my-sm-0" type="submit">Search</button>
+                </form>
+              </div>
+              <div class="col d-none d-lg-block">
+                <div class="text-end">
+                  <ul class="nav col-12 col-lg-auto my-2 justify-content-end my-md-0 text-small">
+                    <li>
+                      <!-- we have text-secondary to make hover -->
+                      <a href="#" class="nav-link text-secondary custom-nav-link" style="text-align: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                          <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                        </svg>
+                        <p class="custom-paragraph">Sing-In</p>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="nav-link text-secondary custom-nav-link" style="text-align: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                          <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                        </svg>
+                        <p class="custom-paragraph">My Favourite</p>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="nav-link text-secondary custom-nav-link" style="text-align: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                          <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                        </svg>
+                        <p class="custom-paragraph">My Purchases</p>
+                      </a>
+                    </li>
+                  </ul>
+                  <!-- <button type="button" class="btn btn-light text-dark me-2">Login</button> -->
+                  <!-- <button type="button" class="btn btn-primary">Sign-up</button> -->
+                </div>
+              </div>
+            </div>
+            
+            
+           
+          </div>
+        </div>
+
+
+      <!-- Sidebar -->
+      <!-- Overlay -->
+      <div id="overlay"></div>
+      <div id="sidebar">
+        <a href="#" class="d-flex align-items-center p-3 border-bottom custom-a">
+          <span class="fs-5 fw-semibold">List Group</span>
+        </a>
+        <div class="list-group list-group-flush border-bottom scrollarea">
+          <a href="#" class="list-group-item list-group-item-action custom-active active py-3 custom-a">
+            <strong> Drawing & Coloring Supplies</strong>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action py-3 custom-active custom-a">
+            <strong>Paints & Colors</strong>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action py-3 custom-active custom-a">
+            <strong>Brushes & Painting Tools</strong>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action py-3 custom-active custom-a">
+            <strong>Papers & Canvases</strong>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action py-3 custom-active custom-a">
+            <strong>Art Accessories</strong>
+          </a>
+        </div>
+      </div>
+      <!-- EndSidebar -->
+      
+      <!-- Start Last Navebar -->
+      <div class="px-3 pt-2 pb-0 border-bottom">
+          <div class="container category-overflow d-none d-lg-block">
+            <ul class="list-unstyled d-flex gap-5 m-0 p-0 pb-3 pt-3">
+              <li>
+                <a class="custom-a" href="#">
+                  Drawing & Coloring Supplies
+                </a>
+              </li>
+              <li>
+                <a class="custom-a" href="#">
+                  Paints & Colors
+                </a>
+              </li>
+              <li>
+                <a class="custom-a" href="#">
+                  Brushes & Painting Tools
+                </a>
+              </li>
+              <li>
+                <a class="custom-a" href="#">
+                  Papers & Canvases
+                </a>
+              </li>
+              <li>
+                <a class="custom-a" href="#">
+                  Art Accessories
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="col height-center d-block d-lg-none">
+            <form class="d-flex col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search" style="width: 100%;">
+              <input type="search" class="form-control" placeholder="Search..." aria-label="Search" style="margin-right: 4px;">
+              <button class="btn btn-outline-success my-sm-0" type="submit">Search</button>
+            </form>
+          </div>
+        
+      </div>
+      <!-- End Last Navebar -->
+      
+    </header>
+    
+    <!-- Start Carousol -->
+    <div id="myCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="20000">
+      <!-- Indicators -->
+      <!-- <ol class="carousel-indicators">
+        <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></li>
+        <li data-bs-target="#myCarousel" data-bs-slide-to="1"></li>
+      </ol> -->
+    
+      <!-- Slides -->
+      <div class="carousel-inner">
+        <div class="carousel-item active" style="background: url(./image/test.jpg);">
+          <div class="container container-slider">
+            <h1>First Image</h1>
+            <div class="typewriter">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga nisi ut nam impedit autem. Atque dolorem 
+                reiciendis voluptatum quisquam, deleniti officiis veniam ex. Rem ipsam perspiciatis ducimus eius tenetur odit?</p>
+            </div>
+            
+            <a href="#" class="btn btn-lg btn-primary">Go It</a>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="./image/gggggg.gif" class="d-block w-100" alt="Carousel Image" style="height: 100%;">
+          <div class="container container-slider">
+            <h1>Second Image</h1>
+            <div class="typewriter">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga nisi ut nam impedit autem. Atque dolorem 
+                reiciendis voluptatum quisquam, deleniti officiis veniam ex. Rem ipsam perspiciatis ducimus eius tenetur odit?</p>
+            </div>
+            <a href="#" class="btn btn-lg btn-primary">dfdf</a>
+          </div>
+        </div>
+      </div>
+      
+      
+
+
+    </div>
+    <!-- End Carousol -->
+
+
+    <!-- Start Popular categories Section -->
+    <div class="container">
+      <div class="row">
+        <h2 style="text-align: center;margin: 15px auto;">Popular categories</h2>
+      </div>
+      <div class="d-flex justify-content-around flex-wrap">
+        <div class="card mb-3" style="width: 18rem;">
+          <img class="card-img-top" src="./image/lucas-george-wendt-zEp3CgWcOj0-unsplash.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-dark" style="width: 100%;">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card mb-3" style="width: 18rem;">
+          <img class="card-img-top" src="./image/lucas-george-wendt-zEp3CgWcOj0-unsplash.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-dark" style="width: 100%;">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card mb-3" style="width: 18rem;">
+          <img class="card-img-top" src="./image/lucas-george-wendt-zEp3CgWcOj0-unsplash.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-dark" style="width: 100%;">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card mb-3" style="width: 18rem;">
+          <img class="card-img-top" src="./image/lucas-george-wendt-zEp3CgWcOj0-unsplash.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-dark" style="width: 100%;">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card mb-3" style="width: 18rem;">
+          <img class="card-img-top" src="./image/lucas-george-wendt-zEp3CgWcOj0-unsplash.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-dark" style="width: 100%;">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card mb-3" style="width: 18rem;">
+          <img class="card-img-top" src="./image/lucas-george-wendt-zEp3CgWcOj0-unsplash.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-dark" style="width: 100%;">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card mb-3" style="width: 18rem;">
+          <img class="card-img-top" src="./image/lucas-george-wendt-zEp3CgWcOj0-unsplash.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-dark" style="width: 100%;">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card mb-3" style="width: 18rem;">
+          <img class="card-img-top" src="./image/lucas-george-wendt-zEp3CgWcOj0-unsplash.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-dark" style="width: 100%;">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Popular categories Section -->
+
+    <!-- Start Footer -->
+    <div class="custom-footer">
+      <div class="container">
+        <footer class="py-5">
+          <div class="row">
+            <div class="col-6 col-md-2 mb-3">
+              <h5>Section</h5>
+              <ul class="nav flex-column">
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+              </ul>
+            </div>
+      
+            <div class="col-6 col-md-2 mb-3">
+              <h5>Section</h5>
+              <ul class="nav flex-column">
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+              </ul>
+            </div>
+      
+            <div class="col-6 col-md-2 mb-3">
+              <h5>Section</h5>
+              <ul class="nav flex-column">
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+              </ul>
+            </div>
+      
+            <div class="col-md-5 offset-md-1 mb-3">
+              <form>
+                <h5>Subscribe to our newsletter</h5>
+                <p>Monthly digest of what's new and exciting from us.</p>
+                <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                  <label for="newsletter1" class="visually-hidden">Email address</label>
+                  <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
+                  <button class="btn custom-color-red" type="button">Subscribe</button>
+                </div>
+              </form>
+            </div>
+          </div>
+      
+          <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+            <p>© 2024 Company, Inc. All rights reserved.</p>
+            <ul class="list-unstyled d-flex">
+              <li class="ms-3"><a class="link-body-emphasis" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-facebook custom-color-red-font" style="color: #1877f2;" viewBox="0 0 16 16">
+                  <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
+                </svg>
+              </a></li>
+              <li class="ms-3"><a class="link-body-emphasis" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-whatsapp custom-color-red-font" style="color: #128C7E;" viewBox="0 0 16 16">
+                  <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                </svg>              </a></li>
+              <li class="ms-3"><a class="link-body-emphasis" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+                  <defs>
+                    <linearGradient id="instagram-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#833AB4;" />
+                      <stop offset="50%" style="stop-color:#C13584;" />
+                      <stop offset="100%" style="stop-color:#FD1D1D;" />
+                    </linearGradient>
+                  </defs>
+                  <path fill="url(#instagram-gradient)" d="M8 0C5.8..."/> <!-- Full path here -->
+                </svg>            </a></li>
+            </ul>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    
+    <!-- End Footer -->
+
+
+    <script src="./js/popper.min.js"></script>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/bootstrap.js"></script>
+    <!-- jQuery (needed for Bootstrap modals) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>
